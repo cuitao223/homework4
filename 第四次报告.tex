@@ -1,0 +1,261 @@
+\documentclass{article}
+
+% 导入中文宏包
+\usepackage{ctex}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{hyperref}
+% 设置页面边距
+\usepackage{geometry}
+\usepackage{graphicx}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm}
+
+% 设置标题、作者和日期
+\title{报告四：调试与性能分析、元编程和PyTorch编程}
+\author{23020007011崔涛}
+
+\begin{document}
+
+% 生成标题、作者和日期
+\maketitle
+
+% 心得报告正文
+\section{实验目的}
+本次课程主要讲授了调试及性能分析，元编程和PyTorch 编程，通过学习这些工具可以帮助我们优化模型性能，提高代码质量和加速以后的开发过程。
+
+\section{介绍}
+\subsection{调试及性能分析，元编程和PyTorch 编程}
+\begin{itemize}
+\item 调试及性能分析的工具提供了可视化界面，使得开发者能够直观地看到程序运行过程中的性能数据，从而更容易发现潜在问题，还能提供关于如何优化瓶颈的具体建议，帮助开发者改进模型性能。\newline
+\item 元编程允许开发者在运行时动态地创建和修改代码，这为PyTorch等深度学习框架提供了极大的灵活性。通过元编程，可以自动化许多重复性的编程任务，减少人为错误并提高开发效率。\newline
+\item PyTorch是一个广泛使用的深度学习框架，它提供了丰富的API和工具来构建、训练和部署深度学习模型。PyTorch以其易用性和灵活性而闻名，支持多种编程范式（如命令式和函数式编程），并且与Python生态系统紧密集成。
+\end{itemize}
+\section{练习内容}
+\subsection{学习样例20个}
+1. 使用 Linux 上的 \verb|journalctl| 命令来获取最近一天中超级用户的登录信息及其所执行的指令。\newline 
+输入journalct1来得到超级用户的执行和登录信息，输入journalct1|grep sudo来得到超级用户执行的指令。\newpage
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{获取超级用户信息.png}
+    \caption{获取超级用户执行信息}
+    \label{fig:enter-label}
+\end{figure}
+
+2. 安装 \verb|shellcheck| 并尝试对脚本进行检查。这段代码有什么问题吗？ \newline
+安装shellcheck后输入shellcheck加文件名字，即可检查
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Shellcheck检查文件.png}
+    \caption{Shellcheck检查代码}
+    \label{fig:enter-label}
+\end{figure}
+
+
+3.使用 cProfile 来比较插入排序和快速排序的性能\newline
+输入如下代码使用cprofile比较测试，\textit{python }\textit{− }\textit{m cP rof ile }\textit{− }\textit{s time sorts.py }
+比较得出：在测试情况下，插入排序的性能比较好。
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{CProfile比较测试.png}
+    \caption{CProfile比较性能}
+    \label{fig:enter-label}
+\end{figure}
+
+4.限制进程资源也是一个非常有用的技术。执行 stress -c 3 并使用 htop 对 CPU 消耗进行可视化。
+先输入sudo apt install htop下载htop,再输入stress -c 3来创建负载，再输入taskset --cpu-list 0,2 stress -c 3限制负载，使用htop命令比较前后差异。\newpage
+ \begin{figure}[!h]
+     \centering
+     \includegraphics[width=0.5\linewidth]{资源限制前.png}
+     \caption{限制前}
+     \label{fig:enter-label}
+ \end{figure}
+ \begin{figure}[!h]
+     \centering
+     \includegraphics[width=0.5\linewidth]{资源限制后.png}
+     \caption{限制后}
+     \label{fig:enter-label}
+ \end{figure}
+ \begin{figure}[!h]
+     \centering
+     \includegraphics[width=0.5\linewidth]{限制进程资源.png}
+     \caption{限制指令}
+     \label{fig:enter-label}
+ \end{figure}
+5.使用 line\_profiler 来比较插入排序和快速排序的性能。\newline
+使用 line\_profiler 工具比较性能需要在代码中相应位置插入装饰器 @\textit{prof ile},插入后再输入指令\textit{kernprof }\textit{− }\textit{l }\textit{− }\textit{v sorts.py}即可得出代码块性能。\newpage
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{比较算法性能.png}
+    \caption{Line\_profiler分析算法性能}
+    \label{fig:enter-label}
+\end{figure}
+6.lsof命令的使用
+命令格式为 \textbf{lsof [选项] [绝对路径的文件名]}列出被各种进程打开的文件信息 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{lsof命令.png}
+    \caption{lsof命令}
+    \label{fig:enter-label}
+\end{figure}
+\newline
+7.strace调试命令
+\verb|strace <命令>|：跟踪系统调用和信号。它可以显示程序执行过程中所调用的所有系统调用以及这些调用的参数、返回值等信息。例如：\verb|strace ls -l|会显示执行\verb|ls -l|命令时的系统调用信息。
+ \begin{figure}[!h]
+     \centering
+     \includegraphics[width=0.5\linewidth]{strace.png}
+     \caption{Strace调试}
+     \label{fig:enter-label}
+ \end{figure}
+ \newline
+8.ltrace指令
+\verb|ltrace <命令>|：跟踪程序运行过程中库函数的调用情况。比如查看一个程序在运行时调用了哪些动态链接库中的函数以及这些函数的参数和返回值。例如：\verb|ltrace my_program|可以跟踪\verb|my_program|运行时的库函数调用 \newpage
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{ltrace.png}
+    \caption{ltrace指令}
+    \label{fig:enter-label}
+\end{figure}
+9.valgrind 相关
+\begin{itemize}
+    \item \verb|valgrind --tool=memcheck <可执行程序>|：用于检测程序中的内存错误，比如内存泄漏、越界访问、使用未初始化的内存等。它可以提供详细的内存错误信息以及错误发生的位置。
+    \item \verb|valgrind --tool=callgrind <可执行程序>|：分析程序中函数的调用关系和执行时间，用于性能调优，可帮助找出程序中哪些函数占用了过多的时间。
+\end{itemize}
+ \begin{figure}[!h]
+     \centering
+     \includegraphics[width=0.5\linewidth]{valgrind.png}
+     \caption{valgrind指令}
+     \label{fig:enter-label}
+ \end{figure}
+10.core dump 相关\newline
+\verb|ulimit -c unlimited|：设置 core 文件大小无限制。当程序崩溃时，系统会生成一个 core 文件，里面包含了程序崩溃时的内存、寄存器等信息。
+\newline
+11.gdb调试分析\newline
+\verb|gdb <可执行程序> <core 文件>|：利用生成的 core 文件进行调试，可以找出程序崩溃的位置以及当时的变量状态等信息。例如，程序崩溃后生成了 core 文件，可以通过\verb|gdb my_program core|来进行调试分析。
+ 
+12nm
+\begin{itemize}
+    \item 格式：\verb|nm <可执行文件或目标文件>|。
+    \item 作用：列出目标文件或可执行文件中的符号，比如全局函数、全局变量等，可用于检查符号是否正确链接等问题。\newpage
+\end{itemize}
+ \begin{figure}[!h]
+     \centering
+     \includegraphics[width=0.5\linewidth]{nm指令.png}
+     \caption{nm指令}
+     \label{fig:enter-label}
+ \end{figure}
+13.readelf
+\begin{itemize}
+    \item 格式：\verb|readelf -a <可执行文件或目标文件>|。
+    \item 作用：显示 elf 文件（可执行文件和目标文件在 Linux 下多为 elf 格式）的详细信息，包括头信息、段信息、符号表等，对分析文件结构和链接相关问题有帮助。
+\end{itemize}
+ 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{readelf.png}
+    \caption{readelf指令}
+    \label{fig:enter-label}
+\end{figure}
+
+
+14.使用usname查看计算机信息
+uname 可显示电脑以及操作系统的相关信息，例如内核版本、主机名、 处理器类型等。
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uname.png}
+    \caption{uname指令}
+    \label{fig:enter-label}
+\end{figure}
+
+15.objdump
+
+\begin{itemize}
+    \item 格式：\verb|objdump -d <可执行文件或目标文件>|。
+    \item 作用：用于反汇编可执行文件或者目标文件，可以查看机器码对应的汇编指令，帮助调试程序在底层的执行逻辑。
+\end{itemize}
+ 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{objdump.png}
+    \caption{objdump指令}
+    \label{fig:enter-label}
+\end{figure}
+
+
+16.dmesg
+\begin{itemize}
+    \item 格式：直接运行\verb|dmesg|。
+    \item 作用：查看内核环形缓冲区的信息，其中可能包含硬件相关的错误信息、驱动加载相关信息等，对调试与内核相关或者硬件相关的问题提供参考。
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{dmesg.png}
+    \caption{dmesg指令}
+    \label{fig:enter-label}
+\end{figure}
+\end{itemize}
+ 
+17.perf
+
+\begin{itemize}
+    \item 格式：例如\verb|perf record <命令>|进行数据采集，\verb|perf report|查看报告。
+    \item 作用：用于 Linux 性能分析，它可以监测诸如 CPU 时钟周期、指令执行次数、缓存命中率等多种性能相关的数据，能帮助定位性能瓶颈所在。
+\end{itemize}
+ 
+18.stap 
+
+\begin{itemize}
+    \item 格式：编写 SystemTap 脚本，然后使用\verb|stap <脚本>|运行。
+    \item 作用：可以动态地收集和分析内核及用户空间程序的运行时信息，可用于调试复杂的系统级问题，比如内核模块间的交互、系统调用的行为等。
+\end{itemize}
+ 
+
+
+
+19.gprof
+
+\begin{itemize}
+    \item 格式：先使用\verb|gcc -pg <源文件>|编译程序，运行程序后再执行\verb|gprof <可执行程序>|。
+    \item 作用：用于分析程序的性能瓶颈，它可以给出每个函数被调用的次数以及在每个函数上花费的时间等信息，帮助开发者进行性能优化相关的调试工作。
+\end{itemize}
+ \begin{figure}[!h]
+     \centering
+     \includegraphics[width=0.5\linewidth]{gprof.png}
+     \caption{gprof命令}
+     \label{fig:enter-label}
+ \end{figure}
+20.systemctl status
+
+\begin{itemize}
+    \item 格式：\verb|systemctl status <服务名称>|。
+    \item 作用：当调试与系统服务相关的问题时，这个指令可以查看服务的运行状态、最近的日志信息等，帮助判断服务是否正常工作以及出现问题的可能原因。
+\end{itemize}
+ 
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{systemctl.png}
+    \caption{systemctl status命令}
+    \label{fig:enter-label}
+\end{figure}
+
+
+
+
+\section{收获感悟}
+在学习 Linux 下调试与分析的过程中，我收获颇丰。我了解了各种调试工具如 GDB 。通过 GDB，我能深入到程序运行的内部，逐行跟踪代码执行，精准定位到程序崩溃或者出现异常的位置。
+我学会了分析内存相关问题，理解了内存布局并且学会使用一些内存泄漏检测工具，这有助于我优化程序的内存使用，避免因内存问题导致的程序不稳定。
+同时，学习分析系统调用和内核日志也让我对 Linux 系统的运行机制有了更深入的认识。从系统调用的角度去理解程序与系统的交互，能发现隐藏在程序运行背后的问题根源。
+总的来说，本次学习极大丰富了我的技能。它不仅能提高我的程序的质量和稳定性，还能加深我对操作系统原理的理解，为进一步深入学习和开发工作奠定了坚实的基础。 
+\newline
+提交记录如下：
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{提交记录.png}
+    \caption{提交记录}
+    \label{fig:enter-label}
+\end{figure}
+github路径
+您可以在此查看项目的源代码: 
+
+\url{https://github.com/cuitao223/homework4}
+\end{document}
